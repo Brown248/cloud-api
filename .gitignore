@@ -1,0 +1,24 @@
+# Virtual Environment
+venv/
+env/
+
+# Environment Variables (สำคัญมาก! ห้าม push ขึ้น GitHub เด็ดขาด)
+.env
+
+# Database local
+*.db
+*.sqlite3
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# PyCharm / VSCode
+.idea/
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
