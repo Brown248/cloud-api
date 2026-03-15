@@ -1,77 +1,90 @@
-# ☁️ Cloud REST API
-
-A production-ready REST API built with **FastAPI** and **PostgreSQL**, deployed on **Render Cloud**.
-
-🌐 **Live Demo**: https://cloud-api-t2ch.onrender.com/docs
+🌐 **Live URL:** https://cloud-api-t2ch.onrender.com
 
 ---
 
-## 📌 Overview
+## 📋 สารบัญ
 
-This project demonstrates cloud API deployment with a full CRUD backend for storing and retrieving temperature readings, sales records, and general key-value data.
-
-```
-User → HTTP Request → FastAPI → PostgreSQL → JSON Response
-```
-
----
-
-## 🚀 Features
-
-- REST API with FastAPI (Python)
-- PostgreSQL database with SQLAlchemy ORM
-- Auto-generated API documentation (Swagger UI)
-- Deployed on Render Cloud (Free Tier)
-- Tested with Postman
+- [Tech Stack](#-tech-stack)
+- [Features](#-features)
+- [Architecture](#-architecture)
+- [Endpoints](#-endpoints)
+- [การติดตั้ง](#-การติดตั้ง)
+- [ทดสอบด้วย Postman](#-ทดสอบด้วย-postman)
+- [Deploy](#-deploy)
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠 Tech Stack
 
-| Technology | Usage |
+| เทคโนโลยี | การใช้งาน |
 |---|---|
-| **FastAPI** | Web framework |
-| **PostgreSQL** | Database (Cloud) |
-| **SQLite** | Database (Local) |
-| **SQLAlchemy** | ORM |
-| **Pydantic** | Data validation |
-| **Uvicorn** | ASGI server |
-| **Render** | Cloud deployment |
-| **Postman** | API testing |
+| **FastAPI** | สร้าง REST API |
+| **PostgreSQL** | Database บน Cloud |
+| **SQLAlchemy** | ORM จัดการ Database |
+| **Pydantic** | Validate ข้อมูล Request/Response |
+| **Render** | Cloud Deployment |
+| **Postman** | ทดสอบ API |
+| **Git / GitHub** | Version Control |
 
 ---
 
-## 📁 Project Structure
+## ✨ Features
+
+- ✅ CRUD API ครบ — GET, POST, DELETE
+- ✅ 3 Endpoints หลัก — Temperature, Sales, Data
+- ✅ PostgreSQL บน Cloud (Render)
+- ✅ รองรับ SQLite สำหรับ Local Development
+- ✅ Auto-generate Docs ด้วย Swagger UI
+- ✅ Validation ด้วย Pydantic
+
+---
+
+## 🏗 Architecture
 
 ```
-cloud-api/
-├── main.py          # API endpoints
-├── models.py        # Database models
-├── schemas.py       # Request/Response schemas
-├── database.py      # Database connection
-├── requirements.txt
-└── .env             # Environment variables (not committed)
+User → Postman / Browser
+         │
+         ▼
+   FastAPI (Render)
+         │
+         ▼
+   SQLAlchemy ORM
+         │
+         ▼
+  PostgreSQL Database
 ```
 
 ---
 
-## 📡 API Endpoints
+## 📡 Endpoints
 
 ### 🌡️ Temperature
 
-| Method | Endpoint | Description |
+| Method | Endpoint | คำอธิบาย |
 |---|---|---|
-| `POST` | `/temperature` | Add temperature record |
-| `GET` | `/temperature` | Get all records |
-| `GET` | `/temperature/{id}` | Get record by ID |
-| `DELETE` | `/temperature/{id}` | Delete record by ID |
+| `POST` | `/temperature` | บันทึกข้อมูลอุณหภูมิ |
+| `GET` | `/temperature` | ดูข้อมูลอุณหภูมิทั้งหมด |
+| `GET` | `/temperature/{id}` | ดูข้อมูลตาม ID |
+| `DELETE` | `/temperature/{id}` | ลบข้อมูลตาม ID |
 
-**POST /temperature** — Request Body:
+**ตัวอย่าง Request:**
+```json
+POST /temperature
+{
+  "location": "Bangkok",
+  "value": 38.5,
+  "unit": "celsius"
+}
+```
+
+**ตัวอย่าง Response:**
 ```json
 {
-    "location": "Bangkok",
-    "value": 38.5,
-    "unit": "celsius"
+  "id": 1,
+  "location": "Bangkok",
+  "value": 38.5,
+  "unit": "celsius",
+  "recorded_at": "2026-03-15T10:00:00"
 }
 ```
 
@@ -79,27 +92,28 @@ cloud-api/
 
 ### 💰 Sales
 
-| Method | Endpoint | Description |
+| Method | Endpoint | คำอธิบาย |
 |---|---|---|
-| `POST` | `/sales` | Add sale record |
-| `GET` | `/sales` | Get all records |
-| `GET` | `/sales/summary` | Get total revenue summary |
+| `POST` | `/sales` | บันทึกข้อมูลการขาย |
+| `GET` | `/sales` | ดูข้อมูลการขายทั้งหมด |
+| `GET` | `/sales/summary` | สรุปยอดขายรวม |
 
-**POST /sales** — Request Body:
+**ตัวอย่าง Request:**
 ```json
+POST /sales
 {
-    "product": "iPhone 15",
-    "amount": 29900.00,
-    "quantity": 2
+  "product": "iPhone 15",
+  "amount": 29900.00,
+  "quantity": 2
 }
 ```
 
-**GET /sales/summary** — Response:
+**ตัวอย่าง Response (summary):**
 ```json
 {
-    "total_orders": 1,
-    "total_items": 2,
-    "total_revenue": 59800.0
+  "total_orders": 1,
+  "total_items": 2,
+  "total_revenue": 59800.0
 }
 ```
 
@@ -107,31 +121,32 @@ cloud-api/
 
 ### 📦 Data
 
-| Method | Endpoint | Description |
+| Method | Endpoint | คำอธิบาย |
 |---|---|---|
-| `POST` | `/data` | Add key-value record |
-| `GET` | `/data` | Get all records |
-| `GET` | `/data/{key}` | Get records by key |
+| `POST` | `/data` | บันทึกข้อมูลทั่วไป |
+| `GET` | `/data` | ดูข้อมูลทั้งหมด |
+| `GET` | `/data/{key}` | ค้นหาตาม key |
 
-**POST /data** — Request Body:
+**ตัวอย่าง Request:**
 ```json
+POST /data
 {
-    "key": "humidity",
-    "value": "75%"
+  "key": "humidity",
+  "value": "75%"
 }
 ```
 
 ---
 
-## ⚙️ Run Locally
+## 💻 การติดตั้ง
 
-### 1. Clone the repository
+### 1. Clone Repository
 ```bash
 git clone https://github.com/YOUR_USERNAME/cloud-api.git
 cd cloud-api
 ```
 
-### 2. Create virtual environment
+### 2. สร้าง Virtual Environment
 ```bash
 python -m venv venv
 
@@ -142,57 +157,55 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-### 3. Install dependencies
+### 3. ติดตั้ง Dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-### 4. Create `.env` file
+### 4. ตั้งค่า Environment Variables
+สร้างไฟล์ `.env`:
 ```env
+# Local (SQLite)
 DATABASE_URL=sqlite:///./mydb.db
+
+# Cloud (PostgreSQL)
+DATABASE_URL=postgresql://user:password@host/dbname
 ```
 
-### 5. Run the server
+### 5. รัน Server
 ```bash
 uvicorn main:app --reload
 ```
 
-### 6. Open API docs
+เปิด Browser → **http://127.0.0.1:8000/docs**
+
+---
+
+## 🧪 ทดสอบด้วย Postman
+
+1. เปิด Postman
+2. เลือก Method `POST`
+3. ใส่ URL `http://127.0.0.1:8000/temperature`
+4. คลิก **Body** → **raw** → **JSON**
+5. วาง JSON แล้วกด **Send**
+
+หรือทดสอบผ่าน Swagger UI ได้เลยที่:
 ```
-http://127.0.0.1:8000/docs
+https://cloud-api-t2ch.onrender.com/docs
 ```
 
 ---
 
-## 🌐 Deploy on Render
+## 🚀 Deploy
 
-1. Push code to GitHub
-2. Create **PostgreSQL** database on Render
-3. Create **Web Service** on Render
-   - Build Command: `pip install -r requirements.txt`
-   - Start Command: `uvicorn main:app --host 0.0.0.0 --port $PORT`
-4. Add Environment Variable: `DATABASE_URL` → External Database URL
-5. Deploy ✅
+โปรเจคนี้ Deploy บน **Render** โดยใช้:
+- **Web Service** — รัน FastAPI
+- **PostgreSQL** — Database
 
----
-
-## 📬 Test with Postman
-
-Import this collection or test manually:
-
-```
-Base URL: https://cloud-api-t2ch.onrender.com
-
-POST /temperature  →  Add temperature
-GET  /temperature  →  Get all temperatures
-POST /sales        →  Add sale
-GET  /sales/summary → Get revenue summary
-POST /data         →  Add data
-GET  /data         →  Get all data
-```
+ขั้นตอน Deploy:
+1. Push โค้ดขึ้น GitHub
+2. เชื่อม Render กับ GitHub repo
+3. ตั้งค่า Environment Variable `DATABASE_URL`
+4. กด Deploy
 
 ---
-
-## 📄 License
-
-MIT License
