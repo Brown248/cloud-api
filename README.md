@@ -1,46 +1,120 @@
-### สร้าง PostgreSQL บน Render
-1. ไปที่ **render.com** → Sign up ฟรี
-2. กด **New +** → **PostgreSQL**
-3. ตั้งชื่อ เช่น `my-cloud-db`
-4. กด **Create Database**
-5. Copy **External Database URL** ไว้
+# ☁️ Cloud API — FastAPI + SQLite
 
-### Deploy Web Service
-1. กด **New +** → **Web Service**
-2. เชื่อม GitHub repo
-3. ตั้งค่า:
-
-| ช่อง | ค่า |
-|---|---|
-| **Runtime** | Python 3 |
-| **Build Command** | `pip install -r requirements.txt` |
-| **Start Command** | `uvicorn main:app --host 0.0.0.0 --port $PORT` |
-
-4. เพิ่ม **Environment Variable**:
-   - Key: `DATABASE_URL`
-   - Value: วาง External URL ของ PostgreSQL ที่ Copy ไว้
-
-5. กด **Create Web Service** รอ ~2 นาที ✅
+REST API สำหรับเก็บข้อมูล Temperature, Sales และ Data  
+Deploy บน Render Cloud
 
 ---
 
-## ทดสอบ API บน Cloud ด้วย Postman
-```
-เปลี่ยน URL จาก:
-http://127.0.0.1:8000/temperature
+## 🛠️ Tech Stack
 
-เป็น:
-https://my-cloud-api.onrender.com/temperature
+- **FastAPI** — Python Web Framework
+- **SQLAlchemy** — ORM
+- **SQLite** (Local) / **PostgreSQL** (Cloud)
+- **Render** — Cloud Deployment
+- **Postman** — API Testing
+
+---
+
+## 📁 Project Structure
+```
+cloud-api/
+├── main.py         # API Endpoints
+├── models.py       # Database Models
+├── schemas.py      # Request/Response Schema
+├── database.py     # Database Connection
+├── requirements.txt
+└── .env            # Environment Variables (ไม่ได้ push)
 ```
 
 ---
 
-## สิ่งที่ใส่ใน Resume ได้เลย
+## 🚀 Run Locally
+```bash
+# 1. Clone repo
+git clone https://github.com/yourusername/cloud-api.git
+cd cloud-api
+
+# 2. สร้าง Virtual Environment
+python -m venv venv
+venv\Scripts\activate      # Windows
+source venv/bin/activate   # Mac/Linux
+
+# 3. ติดตั้ง Dependencies
+pip install -r requirements.txt
+
+# 4. สร้างไฟล์ .env
+echo DATABASE_URL=sqlite:///./mydb.db > .env
+
+# 5. รัน Server
+uvicorn main:app --reload
 ```
-✅ FastAPI (Python)        — สร้าง REST API
-✅ PostgreSQL              — Relational Database
-✅ SQLAlchemy              — ORM
-✅ Postman                 — API Testing
-✅ Render Cloud            — Cloud Deployment
-✅ Git / GitHub            — Version Control
-✅ REST API Design         — GET, POST, DELETE
+
+เปิด → http://127.0.0.1:8000/docs
+
+---
+
+## 📡 API Endpoints
+
+### 🌡️ Temperature
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/temperature` | บันทึกค่าอุณหภูมิ |
+| GET | `/temperature` | ดูข้อมูลทั้งหมด |
+| GET | `/temperature/{id}` | ดูตาม ID |
+| DELETE | `/temperature/{id}` | ลบตาม ID |
+
+**POST /temperature — Request Body**
+```json
+{
+    "location": "Bangkok",
+    "value": 38.5,
+    "unit": "celsius"
+}
+```
+
+---
+
+### 💰 Sales
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/sales` | บันทึกการขาย |
+| GET | `/sales` | ดูข้อมูลทั้งหมด |
+| GET | `/sales/summary` | ดูยอดขายรวม |
+
+**POST /sales — Request Body**
+```json
+{
+    "product": "iPhone 15",
+    "amount": 29900.00,
+    "quantity": 2
+}
+```
+
+---
+
+### 📦 Data
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/data` | บันทึกข้อมูลทั่วไป |
+| GET | `/data` | ดูข้อมูลทั้งหมด |
+| GET | `/data/{key}` | ค้นหาตาม key |
+
+**POST /data — Request Body**
+```json
+{
+    "key": "humidity",
+    "value": "75%"
+}
+```
+
+---
+
+## 🌐 Live Demo
+
+> https://your-app-name.onrender.com
+
+
+---
